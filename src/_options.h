@@ -2,18 +2,19 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-// isGammaRestoreOnCrashEnabled is recommended to be true. When eqgame crashes, this restores your gamma. future EQ clients have this enabled.
+// isGammaRestoreOnCrashEnabled. When eqgame crashes, this restores your gamma. future EQ clients have this enabled.
 // This also may fix eq trying to modify your gamma settings
-bool isGammaRestoreOnCrashEnabled = false;
+bool isGammaRestoreOnCrashEnabled = true;
 
-// isCpuSpeedFixEnabled is recommended to be true. Some CPUs have a symptom where the game runs too fast, future EQ clients have this enabled
-// if a person reports the game running too fast, try enabling and giving this DLL.
-// if this is enabled and your animations are going sluggish, it may be an incorrect cpu check. Let Xackery know in discord
-bool isCpuSpeedFixEnabled = false;
+// isEQGOverrideEnabled if set to true will look for two new options files, eqg.ini and dirs.ini in eq path. This allows eqg route overriding, used by rof2plus
+bool isEQGOverrideEnabled = false;
+
+// isCpuSpeedFixEnabled was removed because of side effects. Instead check out https://github.com/xackery/eq-core-dll/releases/tag/v0.0.1 and distribute EQGraphicsDX9.dll
 
 // isMQInjectsEnabled if set to true will cause some edge-inspired features to work:
-// MQ2Spawns, MQ2Maps, MQ2Commands, MQ2Windows, MQ2Pulse, MQ2Spawns, MapPlugin, MQ2ItemDisplay, MQ2Labels
-bool isMQInjectsEnabled = false;
+// MQ2Spawns, MQ2Maps, MQ2Commands, MQ2Pulse, MQ2Spawns, MapPlugin, MQ2ItemDisplay, MQ2Labels
+// NOT RECOMMENDED. Known to cause memory leaks due to mq2maps strings
+bool isMQInjectsEnabled = true;
 
 // isMapWindowDisabled if set to true will do a soft patch to disable the map in game. If disabled, I suggest isMQInjectsEnabled being false as well, else npc data is still populated
 bool isMapWindowDisabled = false;
@@ -32,7 +33,7 @@ bool isHeroicDisabled = false;
 bool isMaxHPFixEnabled = false;
 
 // isPatchmeDisabled if set to true will let you double click eqgame.exe and not get the "Please run EverQuest" message, will start properly
-bool isPatchmeDisabled = false;
+bool isPatchmeDisabled = true;
 
 // isFoodDrinkSpamDisabled if set to true will stop you are hungry/thirsty messages to display on client. If server side isn't disabled, you can still get negative effects.
 bool isFoodDrinkSpamDisabled = false;
@@ -46,14 +47,22 @@ bool isSpellDataCRCEnabled = false;
 // isCombatDamageDoubleAppliedFixEnabled if set to true fixes a bug in rof2 where combat damage applied to client state is applied twice.
 // it is the main cause of players falling unconsious while the server still thinks they're alive
 // also can help with bouncing healthbar issues
-bool isCombatDamageDoubleAppliedFixEnabled = false;
+bool isCombatDamageDoubleAppliedFixEnabled = true;
 
 // isChecksumFixEnabled if set to true will override the normal checksum logic, if your server is not supporting checksums, can be left false
 bool isChecksumFixEnabled = false;
 
+// isOldModelHorseSupportEnabled if set to true enables horses while using old models
+// quality of life for those that don't enjoy Luclin models but want their benefits
+bool isOldModelHorseSupportEnabled = false;
+
 // isReportHardwareAddressEnabled if set to true will inspect mac addresses and send a more informative context of where EQ is running. 
 // This requires custom server side code that is not in eqemu master branch, and in majority of cases can be left false
 bool isReportHardwareAddressEnabled = false;
+
+// isAllowIllegalAugmentsEnabled if set to true will allow inserting augments which create combinations that the player cannot use.
+// This allows you to bypass an error of "The result of this combine would be both NO TRADE and unusable by you.". If you don't get this error, unlikely needed.
+bool isAllowIllegalAugmentsEnabled = false;
 
 // ***** NPC *******
 
@@ -71,11 +80,18 @@ static NPCEntry NPCs[] = {
     NPCEntry(733, 2, "SHI", 3, 1),
 };
 
-
+// areCustomAnimationsEnabled if set to true will allow custom animations defined in Animations[] to be injected in game
+// NOTE: Must be exactly 2 or 3 characters long, e.g. "BET" or "OK", if only 2 characters, it will replace the first 2 characters of the animation
+bool areCustomOldAnimationsEnabled = false;
+static AnimationEntry CustomAnimations[] = {
+    // originalName, replacementName
+    AnimationEntry("DA", "DW"),
+    //AnimationEntry("OK", "EL"),
+};
 
 // ***** ZONE *******
 
-// areCustomZonesEnabled if set to true will allow custom zones defined in Zones[] to be injected in game
+// areCustomZonesEnabled if set to true will allow custom zones defined in Zones[] to be injected in game (or replaced)
 bool areCustomZonesEnabled = false;
 
 static ZoneEntry Zones[] = {

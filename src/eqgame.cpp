@@ -769,7 +769,7 @@ void InitHooks()
 	InitializeCriticalSection(&gDetourCS);
 
 	if (isMQInjectsEnabled) {
-		DebugSpew("applying mq2 injects");
+		DebugSpew("Applying mq2 injects");
 		InitializeDisplayHook();
 		InitializeChatHook();
 		InitializeMQ2Commands();
@@ -785,7 +785,7 @@ void InitHooks()
 	InitOptions();
 
 	DWORD var = (((DWORD)0x008C4CE0 - 0x400000) + baseAddress);
-
+/* 
 	if (isCpuSpeedFixEnabled) {
 
 		
@@ -812,7 +812,7 @@ void InitHooks()
 		else {
 			DebugSpew("cpu is not candidate for speed fix");
 		}
-	}
+	} */
 	if (isHeroicDisabled) {
 		DebugSpew("disabling heroic stats");
 		var = (((DWORD)0x0044410C - 0x400000) + baseAddress);
@@ -822,6 +822,17 @@ void InitHooks()
 		PatchA((DWORD*)var, "\x90\x90\xEB", 3); // Remove heroic int
 		var = (((DWORD)0x00442BB6 - 0x400000) + baseAddress);
 		PatchA((DWORD*)var, "\x90\x90\xEB", 3); // Remove heroic wis
+	}
+
+	if (isOldModelHorseSupportEnabled) {
+		DebugSpew("enabling old model mount support");
+		var = (((DWORD)0x0058DE28 - 0x400000) + baseAddress);
+		PatchA((DWORD*)var, "\x32\xC0", 2); // No mount models
+	}
+
+	if (isAllowIllegalAugmentsEnabled) {
+		var = (((DWORD)0x006a8448 - 0x400000) + baseAddress);
+		PatchA((DWORD*)var, "\x90\x90\x90\x90\x90\x90", 6);
 	}
 
 	var = (((DWORD)0x004C3250 - 0x400000) + baseAddress);
@@ -940,7 +951,7 @@ void InitHooks()
 
 
 	if (isGammaRestoreOnCrashEnabled) {
-		DebugSpew("applying gamma restore on crash fix");
+		DebugSpew("Applying gamma restore on crash fix");
 		HMODULE hkernel32Mod = GetModuleHandle("kernel32.dll");
 		DWORD gmfadress = (DWORD)GetProcAddress(hkernel32Mod, "GetModuleFileNameA");
 		EzDetour(gmfadress, GetModuleFileNameA_detour, GetModuleFileNameA_tramp);

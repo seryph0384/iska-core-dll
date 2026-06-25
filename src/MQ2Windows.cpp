@@ -207,8 +207,6 @@ void InitializeMQ2Windows()
     int i;
     DebugSpew("Initializing MQ2 Windows");
 
-    extern PCHAR szItemSlot[];
-
     for(i=0;i<NUM_INV_SLOTS;i++)
         ItemSlotMap[szItemSlot[i]]=i;
 
